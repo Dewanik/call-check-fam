@@ -1,5 +1,5 @@
 let people = JSON.parse(localStorage.getItem('people')) || [];
-let selectedPerson = null;
+let selectedPerson = people.length > 0 ? 0 : null;
 let checkStatus = JSON.parse(localStorage.getItem('checkStatus')) || {};
 
 const peopleList = document.getElementById('peopleList');
@@ -33,7 +33,6 @@ function renderPeople() {
     people.forEach((p, index) => {
         // People list for deletion/call and checkbox
         const li = document.createElement('li');
-        li.textContent = `${p.name} (${p.phone})`;
 
         // Checkbox
         const checkbox = document.createElement('input');
@@ -44,7 +43,12 @@ function renderPeople() {
             checkStatus[p.phone] = checkbox.checked;
             localStorage.setItem('checkStatus', JSON.stringify(checkStatus));
         };
-        li.prepend(checkbox);
+
+        // Label for checkbox
+        const label = document.createElement('label');
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(`${p.name} (${p.phone})`));
+        li.appendChild(label);
 
         const delBtn = document.createElement('button');
         delBtn.textContent = 'Delete';
@@ -73,6 +77,17 @@ function renderPeople() {
     if (!notesSection.previousSibling || notesSection.previousSibling !== notesTabsContainer) {
         notesSection.parentNode.insertBefore(notesTabsContainer, notesSection);
     }
+
+    // Show notes for selected person
+    if (selectedPerson !== null && people[selectedPerson]) {
+        notesTextarea.value = people[selectedPerson].notes || '';
+        notesTextarea.disabled = false;
+        saveNotesBtn.disabled = false;
+    } else {
+        notesTextarea.value = '';
+        notesTextarea.disabled = true;
+        saveNotesBtn.disabled = true;
+    }
 }
 
 // Add person
@@ -82,6 +97,7 @@ addPersonForm.onsubmit = function(e) {
     localStorage.setItem('people', JSON.stringify(people));
     personNameInput.value = '';
     personPhoneInput.value = '';
+    if (selectedPerson === null) selectedPerson = 0;
     renderPeople();
 }
 
@@ -93,9 +109,12 @@ function deletePerson(index) {
         people.splice(index, 1);
         localStorage.setItem('people', JSON.stringify(people));
         localStorage.setItem('checkStatus', JSON.stringify(checkStatus));
-        selectedPerson = null;
+        if (people.length === 0) {
+            selectedPerson = null;
+        } else if (selectedPerson >= people.length) {
+            selectedPerson = people.length - 1;
+        }
         renderPeople();
-        notesTextarea.value = '';
     }
 }
 
@@ -103,14 +122,12 @@ function deletePerson(index) {
 function selectPerson(index) {
     selectedPerson = index;
     renderPeople();
-    notesTextarea.value = people[index].notes || '';
 }
 
 // Select notes tab (for notes only)
 function selectNotesTab(index) {
     selectedPerson = index;
     renderPeople();
-    notesTextarea.value = people[index].notes || '';
 }
 
 // Save notes
