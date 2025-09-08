@@ -13,6 +13,37 @@ const notesSection = document.getElementById('personNotes');
 const notesTextarea = document.getElementById('notes');
 const saveNotesBtn = document.getElementById('saveNotes');
 
+// --- Add Share Notes button ---
+let shareBtn = document.getElementById('shareNotes');
+if (!shareBtn) {
+    shareBtn = document.createElement('button');
+    shareBtn.id = 'shareNotes';
+    shareBtn.textContent = 'Share Notes';
+    shareBtn.style.marginLeft = '0.5rem';
+    saveNotesBtn.parentNode.insertBefore(shareBtn, saveNotesBtn.nextSibling);
+}
+shareBtn.onclick = function () {
+    if (selectedPerson === null || !people[selectedPerson]) {
+        alert('Select a person first.');
+        return;
+    }
+    const person = people[selectedPerson];
+    const title = `Wellness Check Note`;
+    const noteText = `Note to ${person.name}:\n${person.notes || ''}`;
+    const shareText = `${title}\n\n${noteText}`;
+    if (navigator.share) {
+        navigator.share({
+            title: title,
+            text: shareText
+        }).catch(() => {});
+    } else {
+        // Fallback: copy to clipboard and instruct user
+        navigator.clipboard.writeText(shareText).then(() => {
+            alert('Note copied! You can now paste it in Messenger, Instagram, or Notes app.');
+        });
+    }
+};
+
 // Add Reset Checkboxes button
 let resetBtn = document.getElementById('resetCheckboxes');
 if (!resetBtn) {
@@ -83,10 +114,12 @@ function renderPeople() {
         notesTextarea.value = people[selectedPerson].notes || '';
         notesTextarea.disabled = false;
         saveNotesBtn.disabled = false;
+        shareBtn.disabled = false;
     } else {
         notesTextarea.value = '';
         notesTextarea.disabled = true;
         saveNotesBtn.disabled = true;
+        shareBtn.disabled = true;
     }
 }
 
