@@ -1,0 +1,20 @@
+{
+  "name": "Wellness Check",
+  "short_name": "WellnessCheck",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4CAF50",
+  "icons": [
+    {
+      "src": "https://fonts.gstatic.com/s/i/materialicons/health_and_safety/v16/24px.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://fonts.gstatic.com/s/i/materialicons/health_and_safety/v16/48px.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wellness Check PWA</title>
+<link rel="manifest" href="manifest.json">
+<style>
+  body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+  header { background: #4CAF50; color: white; padding: 1rem; text-align: center; }
+  #addPersonForm { display: flex; gap: 0.5rem; margin: 1rem; }
+  input, textarea, button { padding: 0.5rem; }
+  #peopleList { list-style: none; padding: 0 1rem; }
+  #peopleList li { padding: 0.5rem; border-bottom: 1px solid #ccc; display: flex; justify-content: space-between; align-items: center; }
+  .tabs { display: flex; gap: 0.5rem; margin: 1rem; flex-wrap: wrap; }
+  .tab { padding: 0.5rem 1rem; border: 1px solid #4CAF50; cursor: pointer; border-radius: 5px; }
+  .tab.active { background: #4CAF50; color: white; }
+  .personNotes { margin: 1rem; }
+  textarea { width: 100%; min-height: 100px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Wellness Check PWA</h1>
+</header>
+
+<section>
+  <form id="addPersonForm">
+    <input type="text" id="personName" placeholder="Name" required>
+    <input type="tel" id="personPhone" placeholder="Phone" required>
+    <button type="submit">Add Person</button>
+  </form>
+
+  <ul id="peopleList"></ul>
+
+  <div class="tabs" id="tabs"></div>
+
+  <div class="personNotes" id="personNotes">
+    <textarea id="notes" placeholder="Add notes here..."></textarea>
+    <button id="saveNotes">Save Notes</button>
+  </div>
+</section>
+
+<script src="app.js"></script>
+</body>
+</html>
