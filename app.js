@@ -180,4 +180,51 @@ function resetCheckboxes() {
     renderPeople();
 }
 
+// --- Add Export All Notes as PDF button ---
+let exportPdfBtn = document.getElementById('exportPdfBtn');
+if (!exportPdfBtn) {
+    exportPdfBtn = document.createElement('button');
+    exportPdfBtn.id = 'exportPdfBtn';
+    exportPdfBtn.textContent = 'Export All Notes as PDF';
+    exportPdfBtn.style.marginLeft = '1rem';
+    notesSection.parentNode.insertBefore(exportPdfBtn, notesSection.nextSibling);
+}
+exportPdfBtn.onclick = function () {
+    if (!people.length) {
+        alert('No people to export.');
+        return;
+    }
+
+    // Dynamically load jsPDF if not present
+    function generatePdf() {
+        const doc = new window.jspdf.jsPDF();
+        people.forEach((person, idx) => {
+            if (idx > 0) doc.addPage();
+            doc.setFontSize(16);
+            doc.text(`Wellness Check Note`, 10, 20);
+            doc.setFontSize(12);
+            doc.text(`Note to ${person.name}:`, 10, 35);
+            doc.setFontSize(11);
+            let notes = person.notes || '';
+            // Split text to fit page width
+            let lines = doc.splitTextToSize(notes, 180);
+            doc.text(lines, 10, 45);
+        });
+        doc.save('wellness-check-notes.pdf');
+    }
+
+    if (typeof window.jspdf === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
+        script.onload = () => {
+            window.jspdf = window.jspdf || window.jspdf;
+            generatePdf();
+        };
+        document.body.appendChild(script);
+    } else {
+        generatePdf();
+    }
+};
+
+
 renderPeople();
